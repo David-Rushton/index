@@ -1,7 +1,7 @@
-﻿using Dr.Index.Infrastructure;
+﻿using Dr.Index.Commands;
+using Dr.Index.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Spectre.Console;
 using Spectre.Console.Cli;
 
 const string EnvironmentVariablePrefix = "IDX_";
@@ -44,7 +44,14 @@ CommandApp GetApp(IConfigurationRoot config, ServiceCollection services)
                 .PropagateExceptions();
         }
 
+        appConfig.AddBranch("new", branchConfig =>
+        {
+            branchConfig.SetDescription("Creates new items");
 
+            branchConfig.AddCommand<NewCardCommand>("card")
+                .WithDescription("Adds a new card to the index")
+                .WithExample(new[] { "new", "card", "some-title" });
+        });
 
     });
 
